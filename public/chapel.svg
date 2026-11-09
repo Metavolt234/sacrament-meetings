@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="430" viewBox="0 0 620 430" fill="none">
+<rect width="620" height="430" rx="28" fill="#EAF1F2"/>
+<circle cx="455" cy="105" r="54" fill="#E9B96F"/>
+<path d="M0 300C105 250 192 278 282 244C381 207 482 235 620 180V430H0V300Z" fill="#C9D9D2"/>
+<path d="M0 342C130 300 231 333 335 296C440 259 533 278 620 247V430H0V342Z" fill="#A8C1B4"/>
+<path d="M177 340V191L310 105L443 191V340H177Z" fill="#FDFBF5"/>
+<path d="M153 198L310 96L467 198" stroke="#315B5A" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M281 122V78H339V122" fill="#315B5A"/>
+<path d="M310 52V94M292 70H328" stroke="#315B5A" stroke-width="8" stroke-linecap="round"/>
+<rect x="204" y="220" width="47" height="62" rx="22" fill="#B9D0D0"/>
+<rect x="369" y="220" width="47" height="62" rx="22" fill="#B9D0D0"/>
+<rect x="281" y="247" width="58" height="93" rx="28" fill="#315B5A"/>
+<path d="M0 366H620" stroke="#78998B" stroke-width="3"/>
+<path d="M78 350L102 301L126 350M505 337L531 281L557 337" stroke="#78998B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
