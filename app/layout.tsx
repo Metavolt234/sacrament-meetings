@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { Lora, Inter } from 'next/font/google';
 import Header from '@/components/Header';
@@ -17,7 +17,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
   return (
     <html lang="en" className={`${inter.variable} ${lora.variable}`}>
       <body>
-        <Header />
+        <Suspense fallback={null}>
+          <Header />
+        </Suspense>
         <main className="site-main">{children}</main>
         <Footer />
       </body>

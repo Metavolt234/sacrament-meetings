@@ -10,7 +10,7 @@ export default function MeetingCard({ meeting }: MeetingCardProps) {
   const itemCount = meeting.speakers.length;
 
   return (
-    <article className="meeting-card">
+    <article className="meeting-card h-full">
       <div className="card-topline">
         <span className="date-label">{formatMeetingDate(meeting.date)}</span>
         <span className="type-pill">{formatMeetingType(meeting.meetingType)}</span>

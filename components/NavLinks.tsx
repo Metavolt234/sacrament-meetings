@@ -14,7 +14,8 @@ export default function NavLinks() {
   return (
     <nav className="section-nav" aria-label="Meeting navigation">
       {links.map((link) => {
-        const active = pathname === link.href || (link.href === '/meetings' && pathname.startsWith('/meetings/'));
+        const active = pathname === link.href
+          || (link.href === '/meetings' && pathname.startsWith('/meetings/') && pathname !== '/meetings/current');
         return (
           <Link key={link.href} href={link.href} className={active ? 'nav-link active' : 'nav-link'} aria-current={active ? 'page' : undefined}>
             {link.label}
