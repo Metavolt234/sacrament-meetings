@@ -10,7 +10,7 @@ function ProgramRow({ label, children }: { label: string; children: ReactNode })
   return (
     <div className="program-row">
       <h3>{label}</h3>
-      <div className="program-content">{children}</div>
+      <div className="program-content min-w-0">{children}</div>
     </div>
   );
 }

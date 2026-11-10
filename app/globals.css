@@ -27,6 +27,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
 .container { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
 .site-main { flex: 1; }
 .site-header { background: rgba(255,255,255,.9); border-bottom: 1px solid var(--line); }
+.site-header__content { min-height: 82px; }
+.site-header__title { margin: 0; font-family: var(--font-lora), Georgia, serif; font-size: 17px; font-weight: 700; }
+.site-header__date { margin: 0; color: var(--muted); font-size: 12px; text-align: right; }
 .header-inner { min-height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .brand { display: inline-flex; align-items: center; gap: 12px; }
 .brand-mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; background: var(--teal); color: white; font-size: 23px; }
@@ -118,6 +121,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
 @media (max-width: 430px) {
   .header-inner { min-height: 72px; }
   .header-date { max-width: 112px; font-size: 10px; }
+  .site-header__content { min-height: 72px; }
+  .site-header__title { font-size: 14px; }
+  .site-header__date { max-width: 130px; font-size: 10px; }
   .brand strong { font-size: 14px; }
   .brand-mark { width: 36px; height: 36px; }
   .hero-actions { align-items: stretch; flex-direction: column; }
