@@ -10,7 +10,7 @@ const lora = Lora({ variable: '--font-lora', subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Sacrament Meeting Planner',
-  description: 'Plan, review, and print sacrament meeting programs.'
+  description: 'Plan, review, and print sacrament meeting programs.' 
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
