@@ -1,73 +1,130 @@
+import 'server-only';
+import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
 import type { SacramentMeeting } from './types';
 
-const meetings: SacramentMeeting[] = [
-  {
-    id: 1, date: '2026-11-01', meetingType: 'regular',
-    presiding: 'Bishop John', conducting: 'Brother Peter',
-    announcements: ['Ward activity next Saturday at 4:00 p.m.'],
-    openingHymn: { number: 2, title: 'The Spirit of God' },
-    openingPrayer: 'Brother James',
-    wardBusiness: [{ description: 'Sustain the newly called ward leaders.' }],
-    stakeBusiness: false,
-    sacramentHymn: { number: 169, title: 'As Now We Take the Sacrament' },
-    speakers: [
-      { name: 'Sister Mary', topic: 'Faith in Jesus Christ', type: 'speaker' },
-      { name: 'Ward Choir', topic: 'I Know That My Redeemer Lives', type: 'musical-number' }
-    ],
-    closingHymn: { number: 134, title: 'I Believe in Christ' },
-    closingPrayer: 'Brother David'
-  },
-  {
-    id: 2, date: '2026-11-08', meetingType: 'testimony',
-    presiding: 'Bishop John', conducting: 'Brother Peter',
-    announcements: ['Youth activity on Wednesday at 5:00 p.m.'],
-    openingHymn: { number: 3, title: 'Now Let Us Rejoice' },
-    openingPrayer: 'Sister Jane', wardBusiness: [], stakeBusiness: false,
-    sacramentHymn: { number: 172, title: 'In Humility, Our Savior' },
-    speakers: [], closingHymn: { number: 85, title: 'How Firm a Foundation' },
-    closingPrayer: 'Brother Paul'
-  },
-  {
-    id: 3, date: '2026-11-15', meetingType: 'regular',
-    presiding: 'Bishop John', conducting: 'Brother Peter',
-    openingHymn: { number: 19, title: 'We Thank Thee, O God, for a Prophet' },
-    openingPrayer: 'Brother Mark', wardBusiness: [], stakeBusiness: true,
-    sacramentHymn: { number: 174, title: 'While of These Emblems We Partake' },
-    speakers: [{ name: 'Brother Paul', topic: 'Service', type: 'speaker' }],
-    closingHymn: { number: 152, title: 'God Be with You Till We Meet Again' },
-    closingPrayer: 'Sister Rose'
-  },
-  {
-    id: 4, date: '2026-11-22', meetingType: 'regular',
-    presiding: 'Bishop John', conducting: 'Sister Grace',
-    announcements: ['Please remember the food donation drive.'],
-    openingHymn: { number: 30, title: 'Come, Come, Ye Saints' },
-    openingPrayer: 'Brother James', wardBusiness: [], stakeBusiness: false,
-    sacramentHymn: { number: 169, title: 'As Now We Take the Sacrament' },
-    speakers: [{ name: 'Sister Grace', topic: 'The power of prayer', type: 'speaker' }],
-    closingHymn: { number: 100, title: 'Nearer, My God, to Thee' },
-    closingPrayer: 'Brother David'
-  },
-  {
-    id: 5, date: '2026-11-29', meetingType: 'regular',
-    presiding: 'Bishop John', conducting: 'Brother Peter',
-    openingHymn: { number: 6, title: 'Redeemer of Israel' },
-    openingPrayer: 'Sister Jane', wardBusiness: [], stakeBusiness: false,
-    sacramentHymn: { number: 170, title: 'God, Our Father, Hear Us Pray' },
-    speakers: [{ name: 'Brother Mark', topic: 'Having a grateful heart', type: 'speaker' }],
-    closingHymn: { number: 98, title: 'I Need Thee Every Hour' },
-    closingPrayer: 'Brother Paul'
+const databaseUrl = process.env.DATABASE_URL;
+let sqlClient: NeonQueryFunction<false, false> | undefined;
+
+function getSql(): NeonQueryFunction<false, false> {
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL is required to read meeting programs.');
   }
-];
-
-export function getMeetings(): SacramentMeeting[] {
-  return [...meetings].sort((a, b) => b.date.localeCompare(a.date));
+  sqlClient ??= neon(databaseUrl);
+  return sqlClient;
 }
 
-export function getMeetingById(id: number): SacramentMeeting | undefined {
-  return meetings.find((meeting) => meeting.id === id);
+function readMeeting(row: Record<string, unknown>): SacramentMeeting {
+  const meetingData = row.meeting_data;
+  if (typeof meetingData !== 'object' || meetingData === null || Array.isArray(meetingData)) {
+    throw new Error('A stored meeting program contains invalid JSON data.');
+  }
+  return meetingData as SacramentMeeting;
 }
 
-export function getMeetingByDate(date: string): SacramentMeeting | undefined {
-  return meetings.find((meeting) => meeting.date === date);
+export interface MeetingPage {
+  meetings: SacramentMeeting[];
+  total: number;
+  page: number;
+  pageSize: number;
+  pageCount: number;
+}
+
+function getSearchPattern(query: string): string {
+  return `%${query.replace(/[\\%_]/g, '\\$&')}%`;
+}
+
+export async function getMeetings(): Promise<SacramentMeeting[]> {
+  const sql = getSql();
+  const rows = await sql`
+    SELECT meeting_data
+    FROM sacrament_meetings
+    ORDER BY meeting_date DESC, id DESC
+  `;
+  return rows.map(readMeeting);
+}
+
+export async function getMeetingsForDate(date: string): Promise<SacramentMeeting[]> {
+  const sql = getSql();
+  const rows = await sql`
+    SELECT meeting_data
+    FROM sacrament_meetings
+    WHERE meeting_date = ${date}::date
+    ORDER BY id DESC
+  `;
+  return rows.map(readMeeting);
+}
+
+export async function getMeetingsPage(query: string, requestedPage: number, pageSize = 5): Promise<MeetingPage> {
+  const sql = getSql();
+  const search = query.trim();
+  const pattern = getSearchPattern(search);
+  const countRows = await sql`
+    SELECT COUNT(*)::text AS total
+    FROM sacrament_meetings
+    WHERE (
+      ${search.length === 0}
+      OR meeting_data->>'presiding' ILIKE ${pattern}
+      OR meeting_data->>'conducting' ILIKE ${pattern}
+      OR meeting_data->>'meetingType' ILIKE ${pattern}
+      OR EXISTS (
+        SELECT 1
+        FROM jsonb_array_elements(COALESCE(meeting_data->'speakers', '[]'::jsonb)) AS speaker
+        WHERE speaker->>'name' ILIKE ${pattern}
+          OR speaker->>'topic' ILIKE ${pattern}
+      )
+    )
+  `;
+  const total = Number(countRows[0]?.total ?? 0);
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
+  const page = Math.min(Math.max(1, requestedPage), pageCount);
+  const rows = await sql`
+    SELECT meeting_data
+    FROM sacrament_meetings
+    WHERE (
+      ${search.length === 0}
+      OR meeting_data->>'presiding' ILIKE ${pattern}
+      OR meeting_data->>'conducting' ILIKE ${pattern}
+      OR meeting_data->>'meetingType' ILIKE ${pattern}
+      OR EXISTS (
+        SELECT 1
+        FROM jsonb_array_elements(COALESCE(meeting_data->'speakers', '[]'::jsonb)) AS speaker
+        WHERE speaker->>'name' ILIKE ${pattern}
+          OR speaker->>'topic' ILIKE ${pattern}
+      )
+    )
+    ORDER BY meeting_date DESC, id DESC
+    LIMIT ${pageSize}
+    OFFSET ${(page - 1) * pageSize}
+  `;
+
+  return {
+    meetings: rows.map(readMeeting),
+    total,
+    page,
+    pageSize,
+    pageCount
+  };
+}
+
+export async function getMeetingById(id: number): Promise<SacramentMeeting | undefined> {
+  const sql = getSql();
+  const rows = await sql`
+    SELECT meeting_data
+    FROM sacrament_meetings
+    WHERE id = ${id}
+    LIMIT 1
+  `;
+  return rows[0] ? readMeeting(rows[0]) : undefined;
+}
+
+export async function getMeetingByDate(date: string): Promise<SacramentMeeting | undefined> {
+  const sql = getSql();
+  const rows = await sql`
+    SELECT meeting_data
+    FROM sacrament_meetings
+    WHERE meeting_date = ${date}::date
+    ORDER BY id DESC
+    LIMIT 1
+  `;
+  return rows[0] ? readMeeting(rows[0]) : undefined;
 }

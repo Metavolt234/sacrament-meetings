@@ -5,8 +5,7 @@ import { getMostRecentSunday } from '@/lib/date-utils';
 
 export default async function CurrentMeetingPage() {
   await connection();
-
-  const meeting = getMeetingByDate(getMostRecentSunday(new Date()));
+  const meeting = await getMeetingByDate(getMostRecentSunday(new Date()));
   if (!meeting) {
     redirect('/meetings');
   }
