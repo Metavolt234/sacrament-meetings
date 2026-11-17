@@ -26,7 +26,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .container { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
 .site-main { flex: 1; }
-.site-header { background: rgba(255,255,255,.9); border-bottom: 1px solid var(--line); }
+.site-header { position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,.9); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px); }
 .site-header__content { min-height: 82px; }
 .site-header__title { margin: 0; font-family: var(--font-lora), Georgia, serif; font-size: 17px; font-weight: 700; }
 .site-header__date { margin: 0; color: var(--muted); font-size: 12px; text-align: right; }
