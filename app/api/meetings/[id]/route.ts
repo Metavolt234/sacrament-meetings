@@ -10,7 +10,7 @@ export async function GET(_request: Request, context: RouteContext) {
   if (!/^\d+$/.test(id)) {
     return NextResponse.json({ error: 'Meeting ID must be a valid number.' }, { status: 400 });
   }
-  const meeting = getMeetingById(Number(id));
+  const meeting = await getMeetingById(Number(id));
   if (!meeting) {
     return NextResponse.json({ error: 'Meeting not found.' }, { status: 404 });
   }
