@@ -29,6 +29,46 @@ export interface MeetingPage {
   pageCount: number;
 }
 
+export async function createMeeting(meeting: Omit<SacramentMeeting, 'id'>): Promise<void> {
+  const sql = getSql();
+  await sql`
+    WITH next_id AS (
+      SELECT nextval(pg_get_serial_sequence('sacrament_meetings', 'id'))::integer AS id
+    )
+    INSERT INTO sacrament_meetings (id, meeting_date, meeting_data)
+    SELECT
+      next_id.id,
+      ${meeting.date}::date,
+      jsonb_set(${JSON.stringify(meeting)}::jsonb, '{id}', to_jsonb(next_id.id), true)
+    FROM next_id
+  `;
+}
+
+export async function updateMeeting(
+  id: number,
+  meeting: Omit<SacramentMeeting, 'id'>
+): Promise<boolean> {
+  const sql = getSql();
+  const rows = await sql`
+    UPDATE sacrament_meetings
+    SET meeting_date = ${meeting.date}::date,
+        meeting_data = ${JSON.stringify({ ...meeting, id })}::jsonb
+    WHERE id = ${id}
+    RETURNING id
+  `;
+  return rows.length > 0;
+}
+
+export async function deleteMeeting(id: number): Promise<boolean> {
+  const sql = getSql();
+  const rows = await sql`
+    DELETE FROM sacrament_meetings
+    WHERE id = ${id}
+    RETURNING id
+  `;
+  return rows.length > 0;
+}
+
 function getSearchPattern(query: string): string {
   return `%${query.replace(/[\\%_]/g, '\\$&')}%`;
 }

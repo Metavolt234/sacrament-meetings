@@ -9,7 +9,7 @@
   --teal-dark: #244746;
   --sage: #eaf1ed;
   --line: #e2e8e3;
-  --gold: #bd8a45;
+  --gold: #8a6128;
 }
 
 @theme inline {
@@ -90,6 +90,35 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
 .admin-meeting-row:last-child { border-bottom: 0; }
 .admin-meeting-row h3 { margin: 0 0 5px; font-family: var(--font-lora), Georgia, serif; font-size: 17px; font-weight: 500; }
 .admin-meeting-row p { margin: 0; color: var(--muted); font-size: 12px; }
+.admin-list-actions, .admin-row-actions, .form-actions { display: flex; align-items: center; gap: 14px; }
+.admin-row-actions form { margin: 0; }
+.delete-link { border: 0; background: none; padding: 0; font: inherit; cursor: pointer; color: #8d3932; }
+.meeting-editor { margin-top: 30px; border: 1px solid var(--line); border-radius: 12px; background: white; padding: 24px; }
+.meeting-editor > h2, .editor-heading h2 { margin: 0; font-family: var(--font-lora), Georgia, serif; font-size: 24px; font-weight: 500; }
+.editor-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.meeting-form { margin-top: 20px; border-top: 1px solid var(--line); padding-top: 20px; }
+.meeting-form > h3 { margin: 0; font-family: var(--font-lora), Georgia, serif; font-size: 20px; font-weight: 500; }
+.form-intro, .form-hint { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.form-intro { margin: 6px 0 20px; }
+.form-hint { margin: 0; }
+.meeting-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.form-field { display: grid; align-content: start; gap: 6px; color: var(--ink); font-size: 12px; font-weight: 700; }
+.form-field-wide { grid-column: 1 / -1; }
+.form-field input:not([type="checkbox"]), .form-field select, .form-field textarea { width: 100%; min-height: 42px; border: 1px solid #bac8c2; border-radius: 7px; background: white; padding: 9px 11px; color: var(--ink); font: inherit; font-weight: 400; }
+.form-field textarea { resize: vertical; }
+.form-field input:focus-visible, .form-field select:focus-visible, .form-field textarea:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.form-field [aria-invalid="true"] { border-color: #a53e36 !important; }
+.form-field-error { color: #8d302b; font-size: 12px; font-weight: 400; }
+.form-field-error p { margin: 0; }
+.form-checkbox { grid-template-columns: auto 1fr; align-items: center; }
+.form-checkbox input { width: 18px; height: 18px; accent-color: var(--teal); }
+.form-checkbox label { grid-column: 2; grid-row: 1; }
+.form-checkbox .form-field-error { grid-column: 1 / -1; }
+.form-status { margin: 18px 0 0; color: #8d302b; font-size: 13px; }
+.form-actions { flex-wrap: wrap; margin-top: 20px; }
+.route-error { margin-top: 30px; border: 1px solid var(--line); border-radius: 12px; background: white; padding: 28px; }
+.route-error h2 { margin: 0 0 8px; font-family: var(--font-lora), Georgia, serif; font-size: 24px; font-weight: 500; }
+.route-error p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
 .detail-page { padding-top: 26px; }
 .detail-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; }
 .program-sheet { max-width: 790px; margin: 0 auto; border: 1px solid var(--line); border-radius: 14px; background: white; padding: 42px 54px; box-shadow: 0 12px 40px rgba(32,51,49,.04); }
@@ -114,6 +143,22 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
 .program-end { padding-top: 24px; color: var(--muted); text-align: center; font-family: var(--font-lora), Georgia, serif; font-size: 14px; font-style: italic; }
 .loading-state, .empty-state { padding: 55px 10px; color: var(--muted); text-align: center; font-size: 13px; }
 .loading-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--gold); }
+.meetings-loading-status { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
+.meetings-list-loading .list-heading > div:first-child { display: grid; gap: 7px; }
+.loading-line { display: block; height: 12px; border-radius: 5px; background: #e9efeb; }
+.loading-line-heading { width: 180px; height: 27px; }
+.loading-line-count { width: 75px; }
+.loading-line-label { width: 290px; }
+.loading-line-input { width: min(440px, 100%); height: 44px; }
+.loading-line-button { width: 100px; height: 44px; }
+.meeting-card-loading { display: grid; min-height: 178px; align-content: start; gap: 14px; }
+.meeting-card-loading .loading-line-date { width: 120px; }
+.meeting-card-loading .loading-line-pill { width: 80px; height: 25px; }
+.meeting-card-loading .loading-line-title { width: 70%; height: 25px; margin-top: 6px; }
+.meeting-card-loading .loading-line-meta { width: 45%; }
+.meeting-card-loading .card-bottom { margin-top: 10px; }
+.meeting-card-loading .loading-line-items { width: 90px; }
+.meeting-card-loading .loading-line-link { width: 110px; }
 .site-footer { border-top: 1px solid var(--line); background: white; }
 .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; min-height: 90px; }
 .footer-inner p { max-width: 540px; margin: 0; color: var(--muted); font-family: var(--font-lora), Georgia, serif; font-size: 13px; font-style: italic; }
@@ -130,6 +175,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
   .meeting-search__controls { flex-wrap: wrap; }
   .meeting-search input { flex: 1 1 100%; }
   .admin-meeting-row { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .admin-list-actions { align-items: flex-end; flex-direction: column; gap: 8px; }
+  .admin-row-actions { flex-wrap: wrap; gap: 12px; }
+  .meeting-editor { padding: 18px; }
+  .meeting-form-grid { grid-template-columns: 1fr; }
+  .editor-heading { align-items: flex-start; flex-direction: column; }
   .meeting-grid { grid-template-columns: 1fr; }
   .program-sheet { padding: 30px 22px; }
   .program-row { grid-template-columns: 1fr; gap: 7px; }

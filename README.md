@@ -17,6 +17,7 @@ Open http://localhost:3000.
 - Meeting archive with URL-based search and five programs per page.
 - Meeting details with announcements, hymns, prayers, ward business, stake business, speakers, and musical numbers.
 - Separate public and leader-facing route groups with scoped layouts and loading states.
+- Leader-facing create, edit, and delete workflows for meeting programs, with server-side validation and accessible field errors.
 - Redirect to the most recent Sunday with a meeting record.
 - JSON API routes for meeting collections and individual meetings.
 - Print-friendly meeting program view.
@@ -31,6 +32,8 @@ Open http://localhost:3000.
 The app intentionally does not fall back to in-memory data. Requests that need meeting records will fail explicitly if `DATABASE_URL` is missing or the migration has not been applied.
 
 Route groups are organizational and do not appear in URLs: public pages remain at `/` and `/meetings`, and leader-facing pages are under `/admin`. A route group is not an authentication boundary; enable Vercel Deployment Protection or add application authentication before using `/admin` for private information.
+
+Meeting program management is available at `/admin`. Create and edit forms validate all submitted values on the server and display field-level errors; unexpected failures show a retry option. The admin routes and Server Actions do not implement authentication or authorization, so protect the deployment before using them with private data.
 
 ## API
 
