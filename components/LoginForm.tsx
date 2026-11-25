@@ -5,11 +5,12 @@ import { authenticate, type LoginState } from '@/app/login/actions';
 
 const initialState: LoginState = {};
 
-export default function LoginForm() {
+export default function LoginForm({ redirectTo }: { redirectTo: string }) {
   const [state, action, pending] = useActionState(authenticate, initialState);
 
   return (
     <form className="meeting-editor login-form" action={action}>
+      <input type="hidden" name="redirectTo" value={redirectTo} />
       <label className="form-field" htmlFor="username">
         Username
         <input id="username" name="username" autoComplete="username" required />

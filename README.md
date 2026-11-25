@@ -26,7 +26,7 @@ Open http://localhost:3000.
 ## Database setup
 
 1. Create a Neon PostgreSQL database and set `DATABASE_URL` to its connection string in `.env.local` for local work and in the Vercel project environment settings for deployments. Keep this variable server-side; do not prefix it with `NEXT_PUBLIC_`.
-2. Run [`db/migrations/001_create_meetings.sql`](./db/migrations/001_create_meetings.sql) against that database. It creates the meeting table and seeds the five existing sample programs without overwriting existing records.
+2. Run [`db/migrations/001_create_meetings.sql`](./db/migrations/001_create_meetings.sql) and [`db/migrations/002_seed_pagination_meetings.sql`](./db/migrations/002_seed_pagination_meetings.sql) against that database, in order. They create the meeting table and seed ten sample programs so the archive has two pages of five meetings.
 3. Restart the application after setting the environment variable.
 
 The app intentionally does not fall back to in-memory data. Requests that need meeting records will fail explicitly if `DATABASE_URL` is missing or the migration has not been applied.

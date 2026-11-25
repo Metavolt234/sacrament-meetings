@@ -12,6 +12,12 @@ export default function Home() {
           <div className="hero-actions">
             <Link className="button button-primary" href="/meetings">Explore meeting programs</Link>
             <Link className="button button-secondary" href="/meetings/current">View this Sunday</Link>
+            <Link
+              className="button button-secondary"
+              href={{ pathname: '/login', query: { callbackUrl: '/admin/meetings/new' } }}
+            >
+              + Add Meeting
+            </Link>
           </div>
         </div>
         <div className="hero-art">

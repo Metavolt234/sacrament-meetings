@@ -4,20 +4,21 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const links = [
-  { href: '/meetings', label: 'All meetings' },
-  { href: '/meetings/current', label: 'This Sunday' }
+  { href: '/', label: 'Home' },
+  { href: '/meetings', label: 'Meetings' },
+  { href: '/meetings/current', label: 'Current Meeting' }
 ];
 
 export default function NavLinks() {
   const pathname = usePathname();
 
   return (
-    <nav className="section-nav" aria-label="Meeting navigation">
+    <nav className="site-nav" aria-label="Primary navigation">
       {links.map((link) => {
         const active = pathname === link.href
           || (link.href === '/meetings' && pathname.startsWith('/meetings/') && pathname !== '/meetings/current');
         return (
-          <Link key={link.href} href={link.href} className={active ? 'nav-link active' : 'nav-link'} aria-current={active ? 'page' : undefined}>
+          <Link key={link.href} href={link.href} className={active ? 'site-nav-link active' : 'site-nav-link'} aria-current={active ? 'page' : undefined}>
             {link.label}
           </Link>
         );
