@@ -4,6 +4,13 @@ import { connection } from 'next/server';
 import { getMeetings } from '@/lib/meetings-db';
 import { formatMeetingDate, formatMeetingType } from '@/lib/date-utils';
 import { deleteMeeting } from '@/lib/actions';
+import type { Metadata } from 'next';
+import { requireAuth } from '@/lib/require-auth';
+
+export const metadata: Metadata = {
+  title: 'Meeting administration',
+  description: 'Manage sacrament meeting programs for your ward.'
+};
 
 export default function AdminPage() {
   return (
@@ -14,6 +21,7 @@ export default function AdminPage() {
 }
 
 async function AdminMeetingList() {
+  await requireAuth();
   await connection();
   const meetings = await getMeetings();
 

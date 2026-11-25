@@ -9,6 +9,7 @@ import {
   updateMeeting as updateMeetingRecord
 } from './meetings-db';
 import type { SacramentMeeting, SpeakerItem } from './types';
+import { requireAuth } from './require-auth';
 
 const meetingTypes = ['testimony', 'regular', 'stake', 'general'] as const;
 
@@ -147,6 +148,7 @@ export async function createMeeting(
   prevState: MeetingFormState,
   formData: FormData
 ): Promise<MeetingFormState> {
+  await requireAuth();
   void prevState;
   const values = getMeetingFormValues(formData);
   const parsed = MeetingFormSchema.safeParse(values);
@@ -170,6 +172,7 @@ export async function updateMeeting(
   prevState: MeetingFormState,
   formData: FormData
 ): Promise<MeetingFormState> {
+  await requireAuth();
   void prevState;
   if (!Number.isSafeInteger(id) || id < 1) {
     return { message: 'The meeting ID is invalid.' };
@@ -197,6 +200,7 @@ export async function updateMeeting(
 }
 
 export async function deleteMeeting(formData: FormData): Promise<void> {
+  await requireAuth();
   const idValue = formData.get('id');
   if (typeof idValue !== 'string' || !/^[1-9]\d*$/.test(idValue)) {
     throw new Error('The meeting ID is invalid.');

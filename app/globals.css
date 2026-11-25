@@ -85,6 +85,10 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
 .pagination__link { color: var(--teal); }
 .pagination__link--disabled { color: #a4afac; }
 .admin-section { min-height: 60vh; }
+.admin-session-actions { margin-top: 12px; }
+.login-section { max-width: 640px; min-height: 60vh; }
+.login-form { display: grid; gap: 16px; }
+.login-form .form-actions { margin-top: 0; }
 .admin-meeting-list { overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: white; }
 .admin-meeting-row { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
 .admin-meeting-row:last-child { border-bottom: 0; }

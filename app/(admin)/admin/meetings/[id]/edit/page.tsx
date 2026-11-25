@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import MeetingForm from '@/components/MeetingForm';
 import { getMeetingById } from '@/lib/meetings-db';
+import { requireAuth } from '@/lib/require-auth';
 
 interface EditMeetingPageProps {
   params: Promise<{ id: string }>;
@@ -17,6 +18,7 @@ export default function EditMeetingPage({ params }: EditMeetingPageProps) {
 }
 
 async function EditMeetingContent({ params }: EditMeetingPageProps) {
+  await requireAuth();
   const { id } = await params;
   const numericId = Number(id);
   if (!Number.isSafeInteger(numericId) || numericId < 1) notFound();

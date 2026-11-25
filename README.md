@@ -31,9 +31,27 @@ Open http://localhost:3000.
 
 The app intentionally does not fall back to in-memory data. Requests that need meeting records will fail explicitly if `DATABASE_URL` is missing or the migration has not been applied.
 
-Route groups are organizational and do not appear in URLs: public pages remain at `/` and `/meetings`, and leader-facing pages are under `/admin`. A route group is not an authentication boundary; enable Vercel Deployment Protection or add application authentication before using `/admin` for private information.
+Route groups are organizational and do not appear in URLs: public pages remain at `/` and `/meetings`, and leader-facing pages are under `/admin`.
 
-Meeting program management is available at `/admin`. Create and edit forms validate all submitted values on the server and display field-level errors; unexpected failures show a retry option. The admin routes and Server Actions do not implement authentication or authorization, so protect the deployment before using them with private data.
+## Authentication
+
+The `/admin` area uses Auth.js Credentials authentication. Configure these server-only variables in `.env.local` (and your deployment environment):
+
+```env
+AUTH_SECRET=<generate a random secret with npx auth secret>
+BISHOPRIC_USERNAME=<bishopric login name>
+BISHOPRIC_PASSWORD=<strong bishopric password>
+```
+
+Visit `/login` to sign in. The admin layout redirects unauthenticated visitors to the login page, and the meeting create, edit, and delete Server Actions independently verify the session. Use a unique, strong password and keep all three values out of source control.
+
+For deployments outside Vercel, set `NEXT_PUBLIC_SITE_URL` to the canonical site origin at build time and runtime so Open Graph image URLs are absolute. Vercel provides its deployment host automatically. For self-hosted production servers, configure `AUTH_TRUST_HOST=true` only when a trusted proxy controls the incoming host; local development does not need this setting.
+
+Meeting program management is available at `/admin`. Create and edit forms validate all submitted values on the server and display field-level errors; unexpected failures show a retry option.
+
+## Metadata
+
+The root layout provides the site's default title, description, and Open Graph artwork using the existing `public/chapel.svg` illustration. The meeting archive and leader sign-in pages also provide route-specific titles and descriptions.
 
 ## API
 

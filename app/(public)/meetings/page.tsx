@@ -2,10 +2,16 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import MeetingCard from '@/components/MeetingCard';
 import { getMeetingsPage } from '@/lib/meetings-db';
+import type { Metadata } from 'next';
 
 interface MeetingsPageProps {
   searchParams: Promise<{ q?: string | string[]; page?: string | string[] }>;
 }
+
+export const metadata: Metadata = {
+  title: 'Meeting archive',
+  description: 'Browse and search past and upcoming sacrament meeting programs.'
+};
 
 export default async function MeetingsPage({ searchParams }: MeetingsPageProps) {
   const params = await searchParams;
